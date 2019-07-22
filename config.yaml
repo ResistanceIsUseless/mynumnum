@@ -1,0 +1,6 @@
+Report Path:
+  #report path with always be current working directory /reports
+Wordlist:
+  - /opt/Wordlists/danielmiessler/Discovery/Web-Content/raft-medium-files-lowercase.txt
+Nmap_Config:
+  commands: " -Pn -T5"
