@@ -1,0 +1,64 @@
+# {0} = IP
+# {1} = PORT
+# {2} = REPORT PATH
+# {3} = DIRECTORY PATH (Not used yet)
+# {4} = PATH WORDLIST (Not used yet)
+# {5} = FILES WORDLIST (Not used yet)
+
+https-:
+  nmap:  "-sV --version-all --script http-enum,http-backup-finder,http-config-backup,http-userdir-enum,http-vhosts,http-webdav-scan,ssl-ccs-injection,ssl-enum-ciphers,ssl-heartbleed,ssl-poodle,http-apache-server-status,http-auth-finder,http-backup-finder,http-webdav-scan,http-waf-detect,http-userdir-enum,http-stored-xss,http-sql-injection,http-security-headers,http-methods,http-iis-webdav-vuln,http-headers,http-dombased-xss,http-default-accounts,http-csrf,http-cross-domain-policy,http-cors.http-comments-displayer"
+  subproc:
+    - nikto +host {0} -p {1}
+    - fuff https://{0}:{1}
+    - snallygaster  --nohttp -n {0}:{1}
+    - sslscan {0}:{1}
+    - "gobuster dir -u https://{0}:{1} -w /opt/Wordlists/danielmiessler/Discovery/Web-Content/raft-medium-files-lowercase.txt -s \"200,204,500\""
+http-:
+  nmap:  "-sV --version-all --script http-enum,http-backup-finder,http-config-backup,http-userdir-enum,http-vhosts,http-webdav-scan,http-apache-server-status,http-auth-finder,http-backup-finder,http-webdav-scan,http-waf-detect,http-userdir-enum,http-stored-xss,http-sql-injection,http-security-headers,http-methods,http-iis-webdav-vuln,http-headers,http-dombased-xss,http-default-accounts,http-csrf,http-cross-domain-policy,http-cors,http-comments-displayer"
+  subproc:
+    - nikto +host {0} -p {1}
+    - "gobuster dir -u http://{0}:{1} -w /opt/Wordlists/danielmiessler/Discovery/Web-Content/raft-medium-files-lowercase.txt -s \"200,204,500\""
+    - snallygaster --nohttps -n {0}:{1} -n
+smb:
+  nmap: "-sV --version-all --script smb-double-pulsar-backdoor,smb-security-mode,smb2-capabilities"
+  subproc:
+#    - enum4linux {0}:{1}
+#    - nbtscan {0}:{1}
+#    - crackmapexec smb {0}:{1}
+#    - smb4k {0}:{1}
+#    - smblookup {0}:{1}
+
+ftp:
+  nmap: "-sV --version-all --version-all --script ftp-*"
+  subproc:
+smtp:
+  nmap: "-sV --version-all --script smtp-brute,smtp-open-relay"
+  subproc:
+#    - smtp-user-enum
+pop3:
+  nmap: "-sV - --script pop3-*"
+  subproc:
+vnc:
+  nmap: "-sV --version-all -script vnc-brute,vnc-info,vnc-title,realvnc-auth-bypass"
+  subproc:
+rdp:
+  nmap: "-sV --version-all --script rdp-enum-encryption,rdp-vuln-ms12-020"
+  subproc:
+ssh:
+  nmap:  "-sV --version-all --script ssh-publickey-acceptance --script-args \"ssh.usernames={'root', 'user'}, ssh.privatekeys={'./id_rsa1', './id_rsa2'}\""
+  subproc:
+mssql:
+  nmap: "-sV --version-all --script ms-sql-brute --script-args userdb=customuser.txt,passdb=custompass.txt"
+  subproc:
+snmp:
+  nmap: "-sV --version-all --script snmp-*"
+  subproc:
+mysql:
+  nmap: "-sV --version-all --script mysql-enum,mysql-brute,mysql-empty-password"
+  subproc:
+rpc:
+  nmap: "-sV --version-all --script rpc-*"
+  subproc:
+unknown:
+  nmap: "-sV --version-all --script vulnscan"
+  subproc:
