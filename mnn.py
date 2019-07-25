@@ -13,13 +13,13 @@ import yaml,os,argparse,subprocess,multiprocessing
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-host', "--hosts", help="IP or Range you wish to scan")
+parser.add_argument('-t', "--target", help="IP or CIDR Range you wish to scan")
 args = parser.parse_args()
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-hosts = "192.168.2.0/24"
+#target = "192.168.2.0/24"
 # ports = "1-3389"
 commands = "-Pn -A -n -T5"
 f0 = open(__location__ + '/config.yaml')
@@ -54,8 +54,8 @@ def service_check(host, service):
 
 
 # main nmap scan function, not to be used for secondary processing
-def nmap_scan(hosts, commands):
-    nm = NmapProcess(hosts, commands)
+def nmap_scan(target, commands):
+    nm = NmapProcess(target, commands)
     #change to sudo_run(run_as='root') to run syn scans
     nm.run_background()
     command = nm.get_command_line()
@@ -106,4 +106,4 @@ def non_nmap_cmd(command, host, service):
 
 
 if __name__ == "__main__":
-    nmap_scan(hosts, commands)
+    nmap_scan(args.target, commands)
